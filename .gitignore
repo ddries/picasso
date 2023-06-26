@@ -1,0 +1,6 @@
+.vscode/
+output.png
+picasso
+valid_png.png
+examples/*/*
+!examples/*/*.c
