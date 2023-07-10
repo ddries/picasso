@@ -5,6 +5,7 @@
 #include <assert.h>
 #include <string.h>
 
+/* alloc chunk with null values */
 chunk_t* create_chunk(void)
 {
     chunk_t *c = malloc(sizeof(chunk_t));
@@ -15,12 +16,14 @@ chunk_t* create_chunk(void)
     return c;
 }
 
+/* alloc chunk data */
 void init_chunk(chunk_t *chunk)
 {
     assert(chunk->length > 0);
     chunk->data = malloc(chunk->length);
 }
 
+/* dealloc chunk data and reset values */
 void free_chunk(chunk_t *chunk)
 {
     chunk->type = 0;
@@ -29,6 +32,7 @@ void free_chunk(chunk_t *chunk)
     free(chunk->data);
 }
 
+/* compute crc to given chunk */
 void crc_chunk(chunk_t *chunk)
 {
     uint64_t total_length = sizeof(chunk->length) + chunk->length;
@@ -37,17 +41,11 @@ void crc_chunk(chunk_t *chunk)
     memcpy(data, &chunk->type, sizeof(chunk->type));
     memcpy(data + sizeof(chunk->type), chunk->data, chunk->length);
 
-    printf("total length: %lu\n", total_length);
-    for (size_t i = 0; i < total_length; i++)
-    {
-        printf("%x ", *(data + i));
-    }
-    printf("\n");
-
     uint32_t c = update_crc(0xffffffffL, data, total_length) ^ 0xffffffffL;
     chunk->crc = c;
 }
 
+/* print chunk contents */
 void print_chunk(chunk_t *chunk)
 {
     printf("== Chunk ==\n");
@@ -64,6 +62,7 @@ void print_chunk(chunk_t *chunk)
     printf("\n== Chunk ==\n");
 }
 
+/* Write bytes to chunk data section*/
 void write_bytes_to_chunk(chunk_t *chunk, uint8_t *bytes, size_t count)
 {
     for (size_t i = 0; i < count; i++)
