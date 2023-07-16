@@ -7,5 +7,8 @@ LIBS = -Lexternal/zlib -lz -lm
 picasso: $(SOURCES)
 	$(CC) $(CFLAGS) $(SOURCES) -o $(TARGET) $(LIBS)
 
+zlib:
+	./build_zlib.sh
+
 clean:
 	rm -r $(TARGET)
